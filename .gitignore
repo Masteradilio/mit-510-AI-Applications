@@ -1,0 +1,32 @@
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual
+mit-510/
+
+# Cache do Pytest
+.pytest_cache/
+
+# Arquivos de log
+*.log
+
+# Dados processados (geralmente podem ser recriados a partir dos dados brutos)
+/data/processed/
+
+# Modelos treinados (podem ser grandes e recriados a partir do código de treinamento)
+/models/models/
+
+# Arquivos específicos do VSCode
+.vscode/
+
+# Arquivos de ambiente (geralmente contêm segredos)
+.env
+*.env
+
+# Arquivos do Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
