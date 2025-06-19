@@ -1,8 +1,23 @@
 # Previsão de Séries Temporais Financeiras com Redes Neurais Recorrentes: Um Estudo de Caso Aplicado ao Bitcoin e Ações da Apple
 
-**Autor:** Agile Capital Research Team  
-**Data:** 16/06/2025  
+**Autor:** Adilio de Sousa Farias
+
+
+**Disciplina:** MIT-510 Artificial Intelligence Application
+
+
+**Professor:** Emerson Abrahan
+
+
+**Data:** 16/06/2025
+
+
 **Versão:** 2.0
+
+Link para o notebook do projeto: [**https://colab.research.google.com/drive/1vFqnejUuDPOxCVRLWJ7E0ZQosagfdecK#scrollTo=Oh_CE5dtJ06P**]()
+
+Link para o repositório do aplicativo Streamlit do projeto:
+[**https://github.com/Masteradilio/mit-510-AI-Applications**]()
 
 ## Resumo
 
@@ -84,11 +99,8 @@ Harvey et al. (2016) discutem o problema de multiple testing em pesquisa finance
 Apesar do extenso corpo de literatura, algumas lacunas importantes foram identificadas:
 
 1. **Comparação sistemática entre ativos**: Poucos estudos comparam diretamente a eficácia de RNNs em ativos com características de volatilidade distintas (criptomoedas vs. ações tradicionais).
-
 2. **Impacto de variáveis exógenas por tipo de ativo**: A literatura carece de análises sobre como diferentes indicadores técnicos afetam a precisão de previsão em diferentes classes de ativos.
-
 3. **Análise de robustez temporal**: Estudos longitudinais sobre a estabilidade da performance de modelos RNN ao longo de diferentes regimes de mercado são limitados.
-
 4. **Integração de múltiplas fontes de dados**: Poucos trabalhos exploram sistematicamente a integração de dados históricos de longo prazo com dados em tempo real de APIs.
 
 Este estudo busca contribuir para o preenchimento dessas lacunas através de uma análise comparativa rigorosa entre Bitcoin e ações da Apple, incorporando variáveis exógenas e avaliando a robustez dos modelos em diferentes condições de mercado.
@@ -100,11 +112,8 @@ Este estudo busca contribuir para o preenchimento dessas lacunas através de uma
 Este estudo adota uma abordagem experimental comparativa para avaliar a eficácia de diferentes arquiteturas de Redes Neurais Recorrentes na previsão de preços de ativos financeiros com características de volatilidade distintas. O design experimental foi estruturado em quatro fases principais:
 
 1. **Fase de Coleta e Preparação de Dados**: Aquisição de dados históricos de preços e volume para Bitcoin (BTC-USD) e Apple Inc. (AAPL) através da API Yahoo Finance, cobrindo o período de janeiro de 2020 a dezembro de 2023.
-
 2. **Fase de Engenharia de Features**: Desenvolvimento de indicadores técnicos e features temporais baseados na literatura de análise técnica financeira.
-
 3. **Fase de Modelagem**: Implementação e treinamento de três arquiteturas RNN (SimpleRNN, LSTM, GRU) com e sem variáveis exógenas.
-
 4. **Fase de Avaliação**: Análise comparativa utilizando métricas estatísticas e simulação de estratégias de trading.
 
 ### 3.2 Fundamentação Teórica
@@ -167,10 +176,11 @@ O fluxo de dados no sistema segue estas etapas principais:
 O projeto utiliza duas fontes principais de dados:
 
 1. **Kaggle**: Conjuntos de dados históricos de longo prazo
+
    - "Top 10 Crypto-Coin Historical Data (2014-2024)" para Bitcoin
    - "Apple Stock (2014-2024)" para ações da Apple
-
 2. **yfinance**: API para dados recentes e ajustados
+
    - Utilizado para obter os dados mais atualizados
    - Garante ajustes por dividendos e desdobramentos (para AAPL)
 
@@ -190,9 +200,7 @@ A consolidação dos dados seguiu uma abordagem cuidadosa para garantir a integr
 Durante a ingestão e processamento, enfrentamos alguns desafios:
 
 1. **Diferenças de timezone**: Os dados do Kaggle e yfinance apresentavam diferenças de fuso horário, causando duplicações aparentes. Solução: padronização para UTC e remoção de informações de timezone.
-
 2. **Valores ausentes em dias não úteis**: Criptomoedas operam 24/7, enquanto o mercado de ações tem dias não úteis. Solução: manter apenas dias com dados para ambos os ativos, facilitando a comparação direta.
-
 3. **Ajustes corporativos**: As ações da AAPL passaram por desdobramentos e distribuição de dividendos. Solução: utilização da coluna "Adj Close" para refletir o valor real considerando esses eventos.
 
 ## 5. Engenharia de Features
@@ -202,19 +210,20 @@ Durante a ingestão e processamento, enfrentamos alguns desafios:
 Implementamos diversos indicadores técnicos para enriquecer os dados e fornecer informações relevantes aos modelos:
 
 1. **Médias Móveis**:
+
    - SMA (Simple Moving Average) de 20, 50 e 200 dias
    - EMA (Exponential Moving Average) de 12 e 26 dias
-
 2. **Indicadores de Momentum**:
+
    - RSI (Relative Strength Index)
    - MACD (Moving Average Convergence Divergence)
    - Stochastic Oscillator
-
 3. **Indicadores de Volatilidade**:
+
    - Bollinger Bands
    - ATR (Average True Range)
-
 4. **Indicadores de Volume**:
+
    - OBV (On-Balance Volume)
 
 ### 5.2 Features Temporais
@@ -222,11 +231,12 @@ Implementamos diversos indicadores técnicos para enriquecer os dados e fornecer
 Além dos indicadores técnicos, adicionamos features cíclicas baseadas em tempo para capturar padrões sazonais:
 
 1. **Componentes de data transformados em representações cíclicas**:
+
    - Dia da semana (transformado em seno e cosseno)
    - Dia do mês (transformado em seno e cosseno)
    - Mês do ano (transformado em seno e cosseno)
-
 2. **Razões e cruzamentos**:
+
    - Razão entre preço atual e médias móveis
    - Sinais de cruzamento entre médias móveis
 
@@ -245,16 +255,17 @@ O tratamento de valores ausentes foi realizado de forma cuidadosa:
 A preparação dos dados para modelagem seguiu estas etapas:
 
 1. **Divisão cronológica dos dados**:
+
    - 70% para treinamento
    - 15% para validação
    - 15% para teste
-
 2. **Normalização**:
+
    - Aplicação de MinMaxScaler para escalonar os dados entre 0 e 1
    - Ajuste do scaler apenas no conjunto de treinamento
    - Aplicação da transformação nos conjuntos de validação e teste
-
 3. **Criação de sequências temporais**:
+
    - Sequências de entrada com 60 dias de histórico
    - Alvos de saída com 14 dias de previsão futura
 
@@ -263,16 +274,17 @@ A preparação dos dados para modelagem seguiu estas etapas:
 Implementamos três arquiteturas de Redes Neurais Recorrentes:
 
 1. **SimpleRNN**:
+
    - Arquitetura mais básica
    - 2 camadas com 50 unidades cada
    - Dropout de 0.2 entre camadas
-
 2. **LSTM (Long Short-Term Memory)**:
+
    - Arquitetura mais robusta para dependências de longo prazo
    - 2 camadas com 50 unidades cada
    - Dropout de 0.2 entre camadas
-
 3. **GRU (Gated Recurrent Unit)**:
+
    - Alternativa mais leve ao LSTM
    - 2 camadas com 50 unidades cada
    - Dropout de 0.2 entre camadas
@@ -285,14 +297,15 @@ O processo de treinamento foi configurado com os seguintes hiperparâmetros:
 2. **Função de perda**: Mean Squared Error (MSE)
 3. **Métrica de monitoramento**: Mean Absolute Error (MAE)
 4. **Callbacks**:
+
    - Early Stopping com paciência de 10 épocas
    - ReduceLROnPlateau para reduzir a taxa de aprendizado quando o progresso estagna
    - ModelCheckpoint para salvar o melhor modelo
-
 5. **Batch size**: 32
 6. **Épocas máximas**: 100 (com early stopping)
 
 Cada arquitetura foi testada em duas configurações:
+
 - **Modelo Básico**: Utilizando apenas dados de preços históricos (OHLCV)
 - **Modelo com Variáveis Exógenas**: Incorporando indicadores técnicos e features temporais
 
@@ -306,33 +319,34 @@ Com base no relatório de treinamento avançado, foram treinados 4 modelos para 
 
 **Apple Inc. (AAPL)**
 
-| Modelo | MSE | MAE | R² |
-|--------|-----|-----|----|  
-| Básico | 0.0031 | 0.0441 | 0.9969 |
+| Modelo                   | MSE    | MAE    | R²    |
+| ------------------------ | ------ | ------ | ------ |
+| Básico                  | 0.0031 | 0.0441 | 0.9969 |
 | Com Variáveis Exógenas | 0.0024 | 0.0388 | 0.9976 |
 
 **Bitcoin (BTC)**
 
-| Modelo | MSE | MAE | R² |
-|--------|-----|-----|----|  
-| Básico | 0.0045 | 0.0532 | 0.9955 |
+| Modelo                   | MSE    | MAE    | R²    |
+| ------------------------ | ------ | ------ | ------ |
+| Básico                  | 0.0045 | 0.0532 | 0.9955 |
 | Com Variáveis Exógenas | 0.0029 | 0.0428 | 0.9971 |
 
 #### 7.1.2 Análise Comparativa dos Resultados
 
 Os resultados revelam padrões importantes:
 
-1. **Impacto das Variáveis Exógenas**: 
+1. **Impacto das Variáveis Exógenas**:
+
    - Para AAPL: Redução de 22.6% no MSE e 12.0% no MAE
    - Para BTC: Redução de 35.6% no MSE e 19.5% no MAE
    - O Bitcoin apresentou maior benefício com variáveis exógenas, sugerindo que indicadores técnicos são mais informativos para ativos de alta volatilidade
-
 2. **Diferenças entre Ativos**:
+
    - AAPL demonstrou maior estabilidade (menor MSE e MAE nos modelos básicos)
    - BTC apresentou maior variabilidade, mas também maior potencial de melhoria com features adicionais
    - Ambos os ativos alcançaram R² superior a 0.99, indicando excelente capacidade preditiva
-
 3. **Robustez dos Modelos**:
+
    - Todos os modelos demonstraram convergência estável durante o treinamento
    - Não foram observados sinais significativos de overfitting nos conjuntos de validação
    - A incorporação de dropout (0.2) e early stopping contribuiu para a generalização
@@ -350,7 +364,7 @@ Avaliamos os modelos usando as seguintes métricas:
 Os resultados da avaliação no conjunto de teste mostraram:
 
 | Modelo    | BTC-USD RMSE | BTC-USD MAE | AAPL RMSE | AAPL MAE |
-|-----------|--------------|-------------|-----------|----------|
+| --------- | ------------ | ----------- | --------- | -------- |
 | SimpleRNN | 1245.67      | 987.32      | 3.45      | 2.78     |
 | LSTM      | 876.54       | 723.91      | 2.87      | 2.31     |
 | GRU       | 912.38       | 756.29      | 3.12      | 2.45     |
@@ -362,19 +376,20 @@ O modelo LSTM apresentou o melhor desempenho geral para ambos os ativos, com o G
 Implementamos uma simulação de estratégia de trading baseada nas previsões:
 
 1. **Estratégia baseada em previsão**:
+
    - Compra quando a previsão média para os próximos 14 dias indica retorno acima de 1%
    - Vende quando a previsão média indica retorno abaixo de -1%
    - Mantém posição atual nos demais casos
-
 2. **Comparação com Buy-and-Hold**:
+
    - Estratégia passiva que simplesmente compra e mantém o ativo durante todo o período
 
 Os resultados da simulação no período de teste mostraram:
 
-| Estratégia            | BTC-USD Retorno | BTC-USD Sharpe | AAPL Retorno | AAPL Sharpe |
-|-----------------------|-----------------|----------------|--------------|-------------|
-| Baseada em Previsão   | 23.7%           | 1.45           | 12.3%        | 1.21        |
-| Buy-and-Hold          | 18.2%           | 0.98           | 10.8%        | 1.05        |
+| Estratégia          | BTC-USD Retorno | BTC-USD Sharpe | AAPL Retorno | AAPL Sharpe |
+| -------------------- | --------------- | -------------- | ------------ | ----------- |
+| Baseada em Previsão | 23.7%           | 1.45           | 12.3%        | 1.21        |
+| Buy-and-Hold         | 18.2%           | 0.98           | 10.8%        | 1.05        |
 
 A estratégia baseada em previsão superou a estratégia Buy-and-Hold em termos de retorno e Sharpe Ratio para ambos os ativos, demonstrando o valor potencial das previsões geradas pelos modelos.
 
@@ -385,10 +400,11 @@ A estratégia baseada em previsão superou a estratégia Buy-and-Hold em termos 
 O aplicativo Streamlit foi desenvolvido com uma estrutura modular:
 
 1. **Componentes reutilizáveis**:
+
    - `plotting.py`: Funções para criação de gráficos interativos
    - `ui_elements.py`: Elementos de interface como seletores e cards
-
 2. **Páginas**:
+
    - Página principal: Visão geral e seleção de ativos
    - Página BTC: Análise e previsão específica para Bitcoin
    - Página AAPL: Análise e previsão específica para Apple
@@ -398,18 +414,19 @@ O aplicativo Streamlit foi desenvolvido com uma estrutura modular:
 O aplicativo oferece as seguintes funcionalidades:
 
 1. **Visualização de dados históricos**:
+
    - Gráficos de preço e volume
    - Indicadores técnicos selecionáveis
-
 2. **Geração de previsões**:
+
    - Seleção do modelo (SimpleRNN, LSTM, GRU)
    - Visualização da previsão para os próximos 14 dias
-
 3. **Avaliação de desempenho**:
+
    - Métricas de erro no conjunto de teste
    - Comparação entre modelos
-
 4. **Simulação de estratégias**:
+
    - Visualização dos retornos da estratégia baseada em previsão
    - Comparação com Buy-and-Hold
 
@@ -418,14 +435,15 @@ O aplicativo oferece as seguintes funcionalidades:
 O design do aplicativo foi pensado para proporcionar uma experiência intuitiva:
 
 1. **Layout responsivo**:
+
    - Sidebar para navegação e controles
    - Área principal para visualização de gráficos e resultados
-
 2. **Interatividade**:
+
    - Seletores para escolha de ativos, modelos e períodos
    - Gráficos interativos com zoom e hover
-
 3. **Feedback visual**:
+
    - Cards de métricas com formatação clara
    - Mensagens de status durante o carregamento e processamento
 
@@ -436,15 +454,16 @@ O design do aplicativo foi pensado para proporcionar uma experiência intuitiva:
 A estratégia de testes do projeto incluiu:
 
 1. **Testes unitários**:
+
    - Testes para funções de processamento de dados
    - Testes para componentes de UI
    - Testes para lógica de previsão
-
 2. **Testes de integração**:
+
    - Testes do fluxo completo de dados
    - Testes da integração entre componentes
-
 3. **Validação manual**:
+
    - Verificação visual de gráficos e resultados
    - Validação de comportamento da interface
 
@@ -453,18 +472,19 @@ A estratégia de testes do projeto incluiu:
 Os testes cobriram os seguintes aspectos:
 
 1. **Ingestão de dados**:
+
    - Carregamento correto de diferentes fontes
    - Consolidação adequada
-
 2. **Pré-processamento**:
+
    - Cálculo correto de indicadores
    - Tratamento adequado de valores ausentes
-
 3. **Modelagem**:
+
    - Criação correta de sequências
    - Funcionamento do pipeline de previsão
-
 4. **Interface**:
+
    - Renderização correta de componentes
    - Interatividade dos elementos de UI
 
@@ -473,14 +493,15 @@ Os testes cobriram os seguintes aspectos:
 Durante o processo de teste e validação, enfrentamos alguns desafios:
 
 1. **Dependências pesadas**:
+
    - Dificuldade em testar componentes que dependem de TensorFlow em ambiente automatizado
    - Solução: Uso de mocks e testes simplificados
-
 2. **Reprodutibilidade**:
+
    - Variações nos resultados devido à natureza estocástica dos modelos
    - Solução: Fixação de seeds e validação por intervalos de confiança
-
 3. **Integração com Streamlit**:
+
    - Desafios em testar componentes Streamlit isoladamente
    - Solução: Mocks para funções do Streamlit e testes de lógica separados da UI
 
@@ -491,29 +512,21 @@ Durante o processo de teste e validação, enfrentamos alguns desafios:
 Este estudo apresenta algumas limitações importantes que devem ser consideradas na interpretação dos resultados:
 
 1. **Período de Análise**: O estudo abrange apenas o período de 2020-2023, que inclui eventos atípicos como a pandemia de COVID-19 e alta volatilidade nos mercados de criptomoedas. Esta limitação temporal pode afetar a generalização dos resultados para outros períodos de mercado.
-
 2. **Seleção de Ativos**: A análise se concentra em apenas dois ativos (Bitcoin e Apple), limitando a generalização dos achados para outras criptomoedas ou ações. A inclusão de mais ativos de diferentes setores e classes poderia fortalecer as conclusões.
-
 3. **Variáveis Exógenas**: Embora tenham sido incluídos indicadores técnicos, o estudo não incorpora variáveis macroeconômicas, dados de sentimento de mercado ou eventos fundamentais que podem influenciar significativamente os preços dos ativos.
-
 4. **Horizonte de Previsão**: O horizonte de previsão de 14 dias pode ser considerado limitado para algumas aplicações práticas de investimento de longo prazo.
 
 ### 10.2 Limitações Técnicas
 
 1. **Arquiteturas de Modelo**: O estudo se concentra apenas em arquiteturas RNN tradicionais (SimpleRNN, LSTM, GRU), não explorando arquiteturas mais recentes como Transformers ou modelos híbridos CNN-RNN.
-
 2. **Otimização de Hiperparâmetros**: Embora tenha sido realizada otimização via grid search, métodos mais sofisticados como Bayesian Optimization ou algoritmos evolutivos poderiam resultar em melhores configurações.
-
 3. **Validação Cruzada**: A validação temporal utilizada, embora apropriada para séries temporais, não explora técnicas mais avançadas como Purged Cross-Validation específicas para dados financeiros.
-
 4. **Tratamento de Regime Changes**: Os modelos não incorporam mecanismos para detectar e adaptar-se a mudanças de regime de mercado, que são comuns em dados financeiros.
 
 ### 10.3 Limitações de Dados
 
 1. **Qualidade dos Dados**: A dependência de uma única fonte de dados (Yahoo Finance) pode introduzir vieses ou inconsistências não detectadas.
-
 2. **Frequência dos Dados**: O uso de dados diários pode não capturar padrões intradiários importantes, especialmente para Bitcoin que opera 24/7.
-
 3. **Dados Ausentes**: Embora tratados adequadamente, os fins de semana e feriados para AAPL criam descontinuidades que podem afetar a modelagem.
 
 ## 11. Trabalhos Futuros
@@ -521,18 +534,19 @@ Este estudo apresenta algumas limitações importantes que devem ser considerada
 ### 11.1 Extensões Metodológicas
 
 1. **Incorporação de Mais Ativos**: Expandir o estudo para incluir:
+
    - Outras criptomoedas (Ethereum, Cardano, Solana)
    - Ações de diferentes setores (tecnologia, saúde, energia)
    - Commodities (ouro, petróleo)
    - Índices de mercado (S&P 500, NASDAQ)
-
 2. **Variáveis Exógenas Avançadas**:
+
    - Dados de sentimento de mercado (Twitter, Reddit, Google Trends)
    - Indicadores macroeconômicos (taxa de juros, inflação, PIB)
    - Dados de volume e liquidez em tempo real
    - Eventos de notícias e análise de texto
-
 3. **Arquiteturas de Modelo Avançadas**:
+
    - Implementação de Transformers para séries temporais
    - Modelos híbridos CNN-LSTM
    - Attention mechanisms
@@ -541,16 +555,17 @@ Este estudo apresenta algumas limitações importantes que devem ser considerada
 ### 11.2 Melhorias Técnicas
 
 1. **Otimização Avançada**:
+
    - Implementação de Bayesian Optimization para hiperparâmetros
    - AutoML para seleção automática de arquiteturas
    - Ensemble methods combinando múltiplos modelos
-
 2. **Validação Robusta**:
+
    - Implementação de Purged Cross-Validation
    - Walk-forward analysis
    - Teste em múltiplos regimes de mercado
-
 3. **Interpretabilidade**:
+
    - Implementação de SHAP values para explicabilidade
    - Análise de importância de features
    - Visualização de padrões aprendidos pelos modelos
@@ -558,16 +573,17 @@ Este estudo apresenta algumas limitações importantes que devem ser considerada
 ### 11.3 Aplicações Práticas
 
 1. **Sistema de Trading Automatizado**:
+
    - Implementação de sistema de execução automática
    - Gestão de risco em tempo real
    - Backtesting mais sofisticado com custos de transação
-
 2. **Dashboard Avançado**:
+
    - Integração com APIs de corretoras
    - Alertas em tempo real
    - Análise de portfólio multi-ativo
-
 3. **Estudos de Impacto**:
+
    - Análise de performance em diferentes condições de mercado
    - Estudo de robustez durante crises financeiras
    - Comparação com fundos de investimento profissionais
@@ -575,11 +591,12 @@ Este estudo apresenta algumas limitações importantes que devem ser considerada
 ### 11.4 Pesquisa Acadêmica
 
 1. **Publicações Científicas**:
+
    - Submissão para conferências de machine learning financeiro
    - Artigos em journals especializados
    - Apresentações em workshops acadêmicos
-
 2. **Colaborações**:
+
    - Parcerias com instituições financeiras
    - Colaboração com pesquisadores de outras universidades
    - Projetos interdisciplinares com economia e finanças
@@ -612,21 +629,22 @@ Apesar dos resultados positivos, o projeto apresenta algumas limitações:
 Para evolução futura do projeto, sugerimos:
 
 1. **Incorporação de dados adicionais**:
+
    - Sentimento de mercado a partir de análise de redes sociais
    - Indicadores macroeconômicos
    - Dados de ordem de mercado (order book)
-
 2. **Exploração de arquiteturas avançadas**:
+
    - Transformers para séries temporais
    - Modelos híbridos combinando CNN e RNN
    - Modelos de atenção
-
 3. **Otimização de estratégias**:
+
    - Implementação de algoritmos de otimização de portfólio
    - Backtesting mais realista com custos de transação
    - Estratégias adaptativas baseadas em incerteza da previsão
-
 4. **Implantação em produção**:
+
    - Sistema de atualização automática de dados
    - API para integração com plataformas de trading
    - Monitoramento de desempenho em tempo real
@@ -634,21 +652,12 @@ Para evolução futura do projeto, sugerimos:
 ## 10. Referências
 
 1. Sezer, O. B., Gudelek, M. U., & Ozbayoglu, A. M. (2020). Financial time series forecasting with deep learning: A systematic literature review: 2005–2019. Applied Soft Computing, 90, 106181.
-
 2. Fischer, T., & Krauss, C. (2018). Deep learning with long short-term memory networks for financial market predictions. European Journal of Operational Research, 270(2), 654-669.
-
 3. Siami-Namini, S., Tavakoli, N., & Namin, A. S. (2018). A comparison of ARIMA and LSTM in forecasting time series. In 2018 17th IEEE International Conference on Machine Learning and Applications (ICMLA) (pp. 1394-1401). IEEE.
-
 4. Jiang, W. (2021). Applications of deep learning in stock market prediction: recent progress. Expert Systems with Applications, 184, 115537.
-
 5. Documentação do TensorFlow: https://www.tensorflow.org/api_docs/python/tf/keras
-
 6. Documentação do Streamlit: https://docs.streamlit.io/
-
 7. Documentação do yfinance: https://pypi.org/project/yfinance/
-
 8. Documentação do TA-Lib: https://ta-lib.org/
-
 9. Kaggle Dataset "Top 10 Crypto-Coin Historical Data (2014-2024)": https://www.kaggle.com/datasets/farhanali097/top-10-crypto-coin-historical-data-2014-2024
-
 10. Kaggle Dataset "Apple Stock (2014-2024)": https://www.kaggle.com/datasets/jp-kochar/apple-stock-2014-2024
